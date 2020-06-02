@@ -1,0 +1,9 @@
+POST http://localhost:8080/github
+Content-Type: application/json
+
+< release_hook.json
+
+###
+POST http://159.203.181.74:8080/github
+Content-Type: application/json
+
