@@ -9,6 +9,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.defaultSerializer
 import io.ktor.client.features.logging.DEFAULT
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logger
@@ -52,7 +53,7 @@ fun Application.module(testing: Boolean = false) {
         }
     }
 
-    val restController = RestController(log)
+    val restController = RestController(log, defaultSerializer())
 
     routing {
         post("/github") {
