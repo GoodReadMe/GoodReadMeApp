@@ -19,5 +19,14 @@ data class Repository(
     @JsonProperty("default_branch")
     val defaultBranch: String,
     @JsonProperty("full_name")
-    val fullName: String
+    val fullName: String,
+    @JsonProperty("forks_url")
+    val forkUrl: String,
+    val url: String,
+    val owner: Owner
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class Owner(
+    val login: String
 )

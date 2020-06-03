@@ -1,0 +1,26 @@
+###
+POST https://api.github.com/repos/VovaStelmashchuk/Test-repo/forks
+Authorization: token 439f9e54cc7caf2c698a2bf274def00ff9479926
+
+### Update readme
+PUT https://api.github.com/repos/UpToDateReadMeStorage/Test-repo/contents/ReadMe.md
+Content-Type: application/json
+Authorization: token 6f40ae05b8a587659b05045fdc58bcb0bbff1f94
+
+{
+  "message": "New commit from rest",
+  "sha": "9594dc4d9f711999a4e743d0440d8df50d00a508",
+  "content": "IyBUZXN0IHJlcG8KMTEKMTEKMjIKMzMKCkNoYW5nZSBmcm9tIGZvcmsKYWRkIHNvbWU="
+}
+
+### Create Pull requesnt
+POST https://api.github.com/repos/VovaStelmashchuk/Test-repo/pulls
+Content-Type: application/json
+Authorization: token 6f40ae05b8a587659b05045fdc58bcb0bbff1f94
+
+{
+  "title": "Amazing new feature",
+  "body": "Please pull these awesome changes in!",
+  "head": "UpToDateReadMeStorage:master",
+  "base": "master"
+}

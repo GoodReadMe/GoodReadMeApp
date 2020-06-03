@@ -1,8 +1,6 @@
 package com.vova
 
 import com.fasterxml.jackson.databind.SerializationFeature
-import com.vova.entities.ProjectReadMe
-import com.vova.entities.ReleaseHook
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -11,11 +9,13 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.request.get
+import io.ktor.client.features.logging.DEFAULT
+import io.ktor.client.features.logging.LogLevel
+import io.ktor.client.features.logging.Logger
+import io.ktor.client.features.logging.Logging
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
-import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.request.path
 import io.ktor.request.receive
@@ -46,19 +46,17 @@ fun Application.module(testing: Boolean = false) {
         install(JsonFeature) {
             serializer = JacksonSerializer()
         }
+        install(Logging) {
+            logger = Logger.DEFAULT
+            level = LogLevel.BODY
+        }
     }
+
+    val restController = RestController(log)
 
     routing {
         post("/github") {
-            val release = call.receive<ReleaseHook>()
-            log.debug(release.toString())
-
-            val readMe = client.get<ProjectReadMe>("https://api.github.com/repos/${release.repository.fullName}/readme")
-
-            log.debug(readMe.toString())
-
-            call.respond(HttpStatusCode.Accepted)
+            call.respond(restController.handleGitHubHook(call.receive(), client))
         }
     }
 }
-
