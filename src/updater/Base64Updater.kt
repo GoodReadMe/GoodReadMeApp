@@ -5,7 +5,7 @@ import java.util.*
 class Updater {
 
     fun updateReadMe(content: String): String {
-        return "$content add some new the new"
+        return "$content add new line from bot"
     }
 }
 
