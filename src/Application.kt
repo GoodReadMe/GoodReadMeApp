@@ -53,10 +53,11 @@ fun Application.module(testing: Boolean = false) {
         }
     }
 
-    val restController = RestController(log, defaultSerializer())
+    val gitHubToken = environment.config.property("ktor.github.token").getString()
+    val restController = RestController(log, defaultSerializer(), gitHubToken)
 
     routing {
-        post("/github") {
+        post("/webhook/github") {
             call.respond(restController.handleGitHubHook(call.receive(), client))
         }
     }

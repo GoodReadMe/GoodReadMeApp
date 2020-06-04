@@ -16,15 +16,15 @@ data class Error(val urlToProblemRepo: String) : GitHubHookResult()
 
 class RestController(
     private val logger: Logger,
-    private val jsonSerializer: JsonSerializer
+    private val jsonSerializer: JsonSerializer,
+    gitHubToken: String
 ) {
 
     private val updater = Base64Updater()
 
-    private val token = "b6539881816dba1fcd9167ac2e85cf1a451319db"
-    private val tokenHeaderValue = "token $token"
+    private val tokenHeaderValue = "token $gitHubToken"
     private val tokenHeaderKey = "Authorization"
-    private val pullsSufix = "/pulls"
+    private val pullsSuffix = "/pulls"
 
     suspend fun handleGitHubHook(release: ReleaseHook, client: HttpClient): GitHubHookResult {
         val originRepo = release.repository
@@ -39,7 +39,7 @@ class RestController(
                 this.headers.append(tokenHeaderKey, tokenHeaderValue)
             }
 
-            client.post<PRResponse>(originRepo.url + pullsSufix) {
+            client.post<PRResponse>(originRepo.url + pullsSuffix) {
                 this.headers.append(tokenHeaderKey, tokenHeaderValue)
                 this.body = jsonSerializer.write(
                     PRRequest(
