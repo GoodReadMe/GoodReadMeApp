@@ -4,15 +4,16 @@ The app update version of library in your ReadMe file.
 ## How it's work
 GitHub send webhook about new release -> App fork your repo -> App create pull request with change in your ReadMe file.
 
+## Setup for public repo
+Add webhook to your repo:
+`http://159.203.181.74:8080/webhook/github`
+
 ## Setup app for self host usage.
 ### Easy run (DockerHub)
 ```shell script
 docker pull vovochkastelmashchuk/good-readme:0.1
 docker run -p 8080:8080 --env GIT_HUB_TOKEN=<Your github token> --rm vovochkastelmashchuk/good-readme:0.1
 ```
-
-root@ReadMe:~/Workspace# 
-root@ReadMe:~/Workspace# 
 
 ### Run from source code with docker
 Change github.token in [application.conf](resources/application.conf)
