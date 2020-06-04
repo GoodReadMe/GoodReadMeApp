@@ -2,6 +2,7 @@ package com.vova
 
 import com.vova.entities.*
 import com.vova.updater.Base64Updater
+import com.vova.updater.VersionFinder
 import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JsonSerializer
 import io.ktor.client.request.delete
@@ -21,6 +22,7 @@ class RestController(
 ) {
 
     private val updater = Base64Updater()
+    private val versionFinder = VersionFinder()
 
     private val tokenHeaderValue = "token $gitHubToken"
     private val tokenHeaderKey = "Authorization"
@@ -31,7 +33,8 @@ class RestController(
         val forkRepo = makeForkRepo(client, release, tokenHeaderKey, tokenHeaderValue)
         val prResponse = try {
             val readMe = client.get<ProjectReadMe>("${forkRepo.url}/readme")
-            val newReadMeContent = updater.updateReadMeBase64(readMe.content)
+            val releases = client.get<List<Release>>(originRepo.releasesUrl)
+            val newReadMeContent = updater.updateReadMeBase64(readMe.content, versionFinder.findVersions(releases))
 
             client.put<String>(readMe.url) {
                 val request = FileUpdateRequest(sha = readMe.sha, content = newReadMeContent)

@@ -11,7 +11,9 @@ data class ReleaseHook(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Release(
-    val name: String
+    val name: String,
+    val draft: Boolean,
+    val prerelease: Boolean
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -20,6 +22,8 @@ data class Repository(
     val defaultBranch: String,
     @JsonProperty("full_name")
     val fullName: String,
+    @JsonProperty("releases_url")
+    val releasesUrl: String,
     @JsonProperty("forks_url")
     val forkUrl: String,
     val url: String,
