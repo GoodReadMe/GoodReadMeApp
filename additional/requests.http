@@ -1,4 +1,4 @@
-POST http://localhost:8080/github
+POST http://159.203.181.74:8080/webhook/github
 Content-Type: application/json
 
 < release_hook.json
