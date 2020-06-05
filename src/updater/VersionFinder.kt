@@ -7,12 +7,18 @@ data class Versions(
     val new: String
 )
 
+class CannotFoundTwoCorrectRelease : RuntimeException()
+
 class VersionFinder {
 
     fun findVersions(releases: List<Release>): Versions {
-        val new = releases.firstExclude()
-        val old = releases.firstExclude(new)
-        return Versions(old, new)
+        try {
+            val new = releases.firstExclude()
+            val old = releases.firstExclude(new)
+            return Versions(old, new)
+        } catch (e: Exception) {
+            throw CannotFoundTwoCorrectRelease()
+        }
     }
 
     private fun List<Release>.firstExclude(exclude: String? = null): String {

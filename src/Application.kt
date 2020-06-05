@@ -1,6 +1,7 @@
 package com.vova
 
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.vova.updater.CannotFoundTwoCorrectRelease
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -17,6 +18,7 @@ import io.ktor.client.features.logging.Logging
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
+import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.request.path
 import io.ktor.request.receive
@@ -41,7 +43,11 @@ fun Application.module(testing: Boolean = false) {
         }
     }
 
-    install(StatusPages) {}
+    install(StatusPages) {
+        exception<CannotFoundTwoCorrectRelease> {
+            call.respond(HttpStatusCode.PreconditionFailed, "error" to "Repo must have at lease two releases")
+        }
+    }
 
     val client = HttpClient(CIO) {
         install(JsonFeature) {
