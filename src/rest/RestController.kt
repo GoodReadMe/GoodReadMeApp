@@ -1,4 +1,4 @@
-package com.vova
+package com.vova.rest
 
 import com.vova.entities.*
 import com.vova.updater.Base64Updater
