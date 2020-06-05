@@ -32,8 +32,8 @@ class RestController(
         val originRepo = release.repository
         val forkRepo = makeForkRepo(client, release, tokenHeaderKey, tokenHeaderValue)
         val prResponse = try {
-            val readMe = client.get<ProjectReadMe>("${forkRepo.url}/readme")
-            val releases = client.get<List<Release>>(originRepo.releasesUrl)
+            val readMe = client.get<ProjectReadMe>(UrlProvider.getReadMeUrl(forkRepo))
+            val releases = client.get<List<Release>>(UrlProvider.getReleasesUrl(originRepo))
             val newReadMeContent = updater.updateReadMeBase64(readMe.content, versionFinder.findVersions(releases))
 
             client.put<String>(readMe.url) {
