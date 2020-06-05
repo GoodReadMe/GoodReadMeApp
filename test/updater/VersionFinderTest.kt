@@ -5,7 +5,7 @@ import com.vova.updater.CannotFoundTwoCorrectRelease
 import com.vova.updater.VersionFinder
 import com.vova.updater.Versions
 import io.kotlintest.shouldBe
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 
 internal class VersionFinderTest {

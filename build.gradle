@@ -41,6 +41,10 @@ shadowJar {
     archiveFileName = 'updatereadme.jar'
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "io.ktor:ktor-client-cio:$ktor_version"

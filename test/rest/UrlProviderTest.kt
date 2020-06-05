@@ -8,7 +8,7 @@ import io.mockk.mockk
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 
-internal class UrlProviderTest {
+class UrlProviderTest {
 
     private val repoPrefix = "https://api.github.com/repos/VovaStelmashchuk/Test-repo/"
 
