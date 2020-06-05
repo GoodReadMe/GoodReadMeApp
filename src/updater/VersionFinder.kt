@@ -1,13 +1,12 @@
 package com.vova.updater
 
+import com.vova.CannotFoundTwoCorrectRelease
 import com.vova.entities.Release
 
 data class Versions(
     val old: String,
     val new: String
 )
-
-class CannotFoundTwoCorrectRelease : RuntimeException()
 
 class VersionFinder {
 

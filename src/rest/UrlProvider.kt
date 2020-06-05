@@ -5,6 +5,8 @@ import okhttp3.HttpUrl
 
 object UrlProvider {
 
+    private const val pullsSuffix = "/pulls"
+
     fun getReleasesUrl(repository: Repository): String {
         return repository.releasesUrl
             .removeSuffix("{/id}")
@@ -17,5 +19,9 @@ object UrlProvider {
             .addPathSegment("readme")
             .build()
             .toString()
+    }
+
+    fun getPullsUrl(repository: Repository): String {
+        return repository.url + pullsSuffix
     }
 }

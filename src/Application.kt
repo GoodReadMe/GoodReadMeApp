@@ -2,7 +2,6 @@ package com.vova
 
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.vova.rest.RestController
-import com.vova.updater.CannotFoundTwoCorrectRelease
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -47,6 +46,9 @@ fun Application.module(testing: Boolean = false) {
     install(StatusPages) {
         exception<CannotFoundTwoCorrectRelease> {
             call.respond(HttpStatusCode.PreconditionFailed, "error" to "Repo must have at lease two releases")
+        }
+        exception<CannotCreatePullRequest> {
+            call.respond(HttpStatusCode.PreconditionFailed, "error" to it.originRepo)
         }
     }
 
