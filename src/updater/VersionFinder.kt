@@ -7,8 +7,6 @@ data class Versions(
     val new: String
 )
 
-class CannotFoundTwoCorrectRelease : RuntimeException()
-
 class VersionFinder {
 
     fun findVersions(releases: List<Release>): Versions {
