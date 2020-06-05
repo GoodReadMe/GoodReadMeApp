@@ -29,4 +29,4 @@ jobs:
         with:
           java-version: 1.8
       - name: Run unit test in Remark-UI
-        run: ./gradlew uptodatereadme:test
+        run: ./gradlew test

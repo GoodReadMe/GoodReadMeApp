@@ -1,6 +1,7 @@
 package com.vova
 
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.vova.rest.RestController
 import com.vova.updater.CannotFoundTwoCorrectRelease
 import io.ktor.application.Application
 import io.ktor.application.call
