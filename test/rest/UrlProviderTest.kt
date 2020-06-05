@@ -14,28 +14,28 @@ class UrlProviderTest {
 
     @TestFactory
     fun createReleaseUrl() = listOf(
-        "${repoPrefix}/releases{/id}",
-        "${repoPrefix}/releases/",
-        "${repoPrefix}/releases"
+        "$repoPrefix/releases{/id}",
+        "$repoPrefix/releases/",
+        "$repoPrefix/releases"
     ).map { mockUrl ->
         DynamicTest.dynamicTest("Create releases url") {
             val repo = mockk<Repository> {
                 every { releasesUrl } answers { mockUrl }
             }
-            UrlProvider.getReleasesUrl(repo) shouldBe "${repoPrefix}releases"
+            UrlProvider.getReleasesUrl(repo) shouldBe "$repoPrefix/releases"
         }
     }
 
     @TestFactory
     fun createReadMeUrl() = listOf(
         repoPrefix,
-        "${repoPrefix}/"
+        "$repoPrefix/"
     ).map { mockUrl ->
         DynamicTest.dynamicTest("Create readme url") {
             val repo = mockk<Repository> {
                 every { url } answers { mockUrl }
             }
-            UrlProvider.getReadMeUrl(repo) shouldBe "${repoPrefix}/readme"
+            UrlProvider.getReadMeUrl(repo) shouldBe "$repoPrefix/readme"
         }
     }
 }
