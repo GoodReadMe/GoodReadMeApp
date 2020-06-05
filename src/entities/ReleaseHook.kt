@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ReleaseHook(
-    val action : String,
+    val action: String,
     val release: Release,
     val repository: Repository
 )
