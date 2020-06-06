@@ -1,6 +1,7 @@
 package com.vova
 
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.vova.entities.ReleaseHook
 import com.vova.rest.RestController
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -20,6 +21,7 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
+import io.ktor.request.ContentTransformationException
 import io.ktor.request.path
 import io.ktor.request.receive
 import io.ktor.response.respond
@@ -50,6 +52,9 @@ fun Application.module(testing: Boolean = false) {
         exception<CannotCreatePullRequest> {
             call.respond(HttpStatusCode.PreconditionFailed, "error" to it.originRepo)
         }
+        exception<ContentTransformationException> {
+            call.respond(HttpStatusCode.UnprocessableEntity)
+        }
     }
 
     val client = HttpClient(CIO) {
@@ -67,7 +72,12 @@ fun Application.module(testing: Boolean = false) {
 
     routing {
         post("/webhook/github") {
-            call.respond(restController.handleGitHubHook(call.receive(), client))
+            val hook = call.receive<ReleaseHook>()
+            if (hook.action == "published") {
+                call.respond(restController.handleGitHubHook(hook, client))
+            } else {
+                call.respond(HttpStatusCode.UnprocessableEntity)
+            }
         }
     }
 }
