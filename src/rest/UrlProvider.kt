@@ -1,7 +1,6 @@
 package com.vova.rest
 
 import com.vova.entities.Repository
-import okhttp3.HttpUrl
 
 object UrlProvider {
 
@@ -14,11 +13,9 @@ object UrlProvider {
     }
 
     fun getReadMeUrl(repository: Repository): String {
-        return HttpUrl.get(repository.url)
-            .newBuilder()
-            .addPathSegment("readme")
-            .build()
-            .toString()
+        return repository.url
+            .removeSuffix("/")
+            .plus("/readme")
     }
 
     fun getPullsUrl(repository: Repository): String {
