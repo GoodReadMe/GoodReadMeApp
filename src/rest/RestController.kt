@@ -28,10 +28,10 @@ class RestController(
 
     suspend fun handleGitHubHook(release: ReleaseHook, client: HttpClient): Success {
         val originRepo = release.repository
-        val forkRepo = makeForkRepo(client, release, tokenHeaderKey, tokenHeaderValue)
-
-        val readMe = client.get<ProjectReadMe>(UrlProvider.getReadMeUrl(forkRepo))
         val releases = client.get<List<Release>>(UrlProvider.getReleasesUrl(originRepo))
+
+        val forkRepo = makeForkRepo(client, release, tokenHeaderKey, tokenHeaderValue)
+        val readMe = client.get<ProjectReadMe>(UrlProvider.getReadMeUrl(forkRepo))
         val newReadMeContent = updater.updateReadMeBase64(readMe.content, versionFinder.findVersions(releases))
 
         client.put<String>(readMe.url) {
@@ -54,18 +54,20 @@ class RestController(
         originRepo: Repository,
         forkRepo: Repository
     ): PRResponse {
+        val pullRequestBody = jsonSerializer.write(
+            PRRequest(
+                head = "${forkRepo.owner.login}:${originRepo.defaultBranch}",
+                base = originRepo.defaultBranch
+            )
+        )
+        logger.info(pullRequestBody.toString())
         return try {
             client.post(UrlProvider.getPullsUrl(originRepo)) {
                 this.headers.append(tokenHeaderKey, tokenHeaderValue)
-                this.body = jsonSerializer.write(
-                    PRRequest(
-                        head = "${forkRepo.owner.login}:${forkRepo.defaultBranch}",
-                        base = forkRepo.defaultBranch
-                    )
-                )
+                this.body = pullRequestBody
             }
         } catch (e: Exception) {
-            logger.error("Cannot create repo", e)
+            logger.error("Cannot create PULL REQUEST", e)
             throw CannotCreatePullRequest(originRepo)
         }
     }
