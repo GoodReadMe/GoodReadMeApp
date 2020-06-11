@@ -1,10 +1,13 @@
 package com.vova.updater
 
+import com.vova.NothingToUpdate
 import java.util.*
 
 class Updater {
 
-    private val CODE_MARKDOWN_MARKET = "```"
+    companion object {
+        private const val CODE_MARKDOWN_MARKET = "```"
+    }
 
     fun updateReadMe(content: String, versions: Versions): String {
         var result = content
@@ -21,6 +24,9 @@ class Updater {
             val newString = result.substring(start, end).replace(versions.old, versions.new)
             result = result.replaceRange(start, end, newString)
             i = end
+        }
+        if (result == content) {
+            throw NothingToUpdate()
         }
         return result
     }

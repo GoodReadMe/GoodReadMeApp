@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class GitHubReleaseHook(
     val action: String,
     val release: Release,
-    val gitHubRepository: GitHubRepository
+    val repository: GitHubRepository
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

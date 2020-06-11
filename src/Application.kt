@@ -1,7 +1,6 @@
 package com.vova
 
 import com.fasterxml.jackson.databind.SerializationFeature
-import com.vova.entities.ReleaseHook
 import com.vova.entities.Repository
 import com.vova.entities.github.GitHubReleaseHook
 import com.vova.rest.RestController
@@ -25,7 +24,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.request.ContentTransformationException
 import io.ktor.request.path
-import io.ktor.request.receive
+import io.ktor.request.receiveOrNull
 import io.ktor.response.respond
 import io.ktor.routing.post
 import io.ktor.routing.routing
@@ -57,6 +56,9 @@ fun Application.module(testing: Boolean = false) {
         exception<ContentTransformationException> {
             call.respond(HttpStatusCode.UnprocessableEntity)
         }
+        exception<NothingToUpdate> {
+            call.respond(HttpStatusCode.PreconditionFailed, it.message.toString())
+        }
     }
 
     val client = HttpClient(CIO) {
@@ -75,23 +77,33 @@ fun Application.module(testing: Boolean = false) {
     val checkMeEndPoint = "/checkMe"
 
     routing {
-        post<GitHubReleaseHook>(checkMeEndPoint) {
-            val hook = call.receive<GitHubReleaseHook>()
-            if (hook.action == "published") {
+        post(checkMeEndPoint) {
+            call.receiveOrNull<GitHubReleaseHook>()?.let { hook ->
+                if (hook.action != "published") {
+                    call.respond(HttpStatusCode.UnprocessableEntity)
+                    return@post
+                }
                 call.respond(
                     controller.updateReadMe(
                         Repository(
-                            hook.gitHubRepository.user.login,
-                            hook.gitHubRepository.name
+                            hook.repository.user.login,
+                            hook.repository.name
                         )
                     )
                 )
-            } else {
+
                 call.respond(HttpStatusCode.UnprocessableEntity)
+                return@post
             }
-        }
-        post<Repository>(checkMeEndPoint) {
-            controller.updateReadMe(call.receive())
+
+            call.receiveOrNull<Repository>()?.let {
+                controller.updateReadMe(it)
+                call.respond(HttpStatusCode.UnprocessableEntity)
+                return@post
+            }
+
+            call.respond(HttpStatusCode.UnprocessableEntity)
+            return@post
         }
     }
 }
