@@ -13,3 +13,8 @@ Content-Type: application/json
 ###
 POST http://159.203.181.74:8080/checkMe
 Content-Type: application/json
+
+{
+  "owner": "<Owner name>",
+  "repo": "<Repo name>"
+}

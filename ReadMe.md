@@ -2,15 +2,28 @@
 The app update version of library in your ReadMe file.
 
 ## How it's work
-GitHub send webhook about new release -> App fork your repo -> App create pull request with change in your ReadMe file.
+App receive event about new release -> App fork your repo -> App create pull request with change in your ReadMe file.
 
 ## Setup
-### By GitHub WebHook
-Add webhook to GitHub repo:
+### Use our github action (InProgress)
+
+### By GitHub WebHook (Recommended)
+Go to Repository Setting -> WebHooks -> Add webhook 
  - Payload URL: `http://159.203.181.74:8080/checkMe`
  - Content type: `application/json`
  - Which events would you like to trigger this webhook?: `everything`
-![add github webhook](additional/images/add_github_webhook.png)
+ 
+### Manually
+Call server manually
+```http request
+POST http://159.203.181.74:8080/checkMe
+Content-Type: application/json
+
+{
+  "owner": "<Owner name>",
+  "repo": "<Repo name>"
+}
+```
 
 ## Setup app for self host usage.
 ### Easy run (DockerHub)
