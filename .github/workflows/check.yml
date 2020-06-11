@@ -12,11 +12,7 @@ jobs:
         with:
           fetch-depth: 1
       - name: ktlint
-        uses: ScaCap/action-ktlint@master
-        with:
-          github_token: ${{ secrets.github_token }}
-          level: error
-          reporter: github-pr-check
+        run: ./gradlew test
   unittest:
     name: Run unit tests
     runs-on: ubuntu-latest
