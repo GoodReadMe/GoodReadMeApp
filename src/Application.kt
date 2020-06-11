@@ -1,6 +1,7 @@
 package com.vova
 
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.vova.entities.FullNameRequest
 import com.vova.entities.Repository
 import com.vova.entities.github.GitHubReleaseHook
 import com.vova.rest.RestController
@@ -92,13 +93,20 @@ fun Application.module(testing: Boolean = false) {
                     )
                 )
 
-                call.respond(HttpStatusCode.UnprocessableEntity)
                 return@post
             }
 
+            call.receiveOrNull<FullNameRequest>()?.let { fullNameRequest ->
+                try {
+                    val fullNameArgs = fullNameRequest.fullName.split('/')
+                    call.respond(controller.updateReadMe(Repository(fullNameArgs[0], fullNameArgs[1])))
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.UnprocessableEntity)
+                }
+            }
+
             call.receiveOrNull<Repository>()?.let {
-                controller.updateReadMe(it)
-                call.respond(HttpStatusCode.UnprocessableEntity)
+                call.respond(controller.updateReadMe(it))
                 return@post
             }
 
