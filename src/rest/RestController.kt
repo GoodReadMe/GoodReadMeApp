@@ -49,13 +49,17 @@ class RestController(
         return Success(prResponse.htmlUrl)
     }
 
-    private suspend fun deleteOldRepo(originRepo: Repository): String {
+    private suspend fun deleteOldRepo(originRepo: Repository) {
         val botUser = client.get<User>(UrlProvider.getCurrentUserUrl()) {
             this.headers.append(tokenHeaderKey, tokenHeaderValue)
         }
 
-        return client.delete<String>(UrlProvider.getOldRepoUrl(originRepo, botUser)) {
-            this.headers.append(tokenHeaderKey, tokenHeaderValue)
+        try {
+            client.delete<String>(UrlProvider.getOldRepoUrl(originRepo, botUser)) {
+                this.headers.append(tokenHeaderKey, tokenHeaderValue)
+            }
+        } catch (e: Exception) {
+            //ignore error in this case
         }
     }
 
