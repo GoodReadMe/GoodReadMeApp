@@ -29,14 +29,14 @@ class RestController(
 
     suspend fun handleGitHubHook(release: ReleaseHook): Success {
         val originRepo = release.repository
+        val releases = client.get<List<Release>>(UrlProvider.getReleasesUrl(originRepo))
+        val versions = versionFinder.findVersions(releases)
 
         deleteOldRepo(originRepo)
 
-        val releases = client.get<List<Release>>(UrlProvider.getReleasesUrl(originRepo))
-
         val forkRepo = makeForkRepo(client, release, tokenHeaderKey, tokenHeaderValue)
         val readMe = client.get<ProjectReadMe>(UrlProvider.getReadMeUrl(forkRepo))
-        val newReadMeContent = updater.updateReadMeBase64(readMe.content, versionFinder.findVersions(releases))
+        val newReadMeContent = updater.updateReadMeBase64(readMe.content, versions)
 
         client.put<String>(readMe.url) {
             val request = FileUpdateRequest(sha = readMe.sha, content = newReadMeContent)
