@@ -1,13 +1,13 @@
-package com.vova.entities
+package com.vova.entities.github
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class ReleaseHook(
+data class GitHubReleaseHook(
     val action: String,
     val release: Release,
-    val repository: Repository
+    val repository: GitHubRepository
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -18,11 +18,12 @@ data class Release(
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class Repository(
+data class GitHubRepository(
     @JsonProperty("default_branch")
     val defaultBranch: String,
     @JsonProperty("full_name")
     val fullName: String,
+    val name: String,
     @JsonProperty("releases_url")
     val releasesUrl: String,
     @JsonProperty("forks_url")
