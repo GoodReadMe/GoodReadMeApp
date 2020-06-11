@@ -20,7 +20,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://goodreadme.androidstory.dev:8080/checkMe
+POST http://goodreadme.androidstory.dev:8080/checkMe/byRepoFullName
 Content-Type: application/json
 
 {
