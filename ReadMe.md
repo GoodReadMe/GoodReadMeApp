@@ -9,14 +9,14 @@ App receive event about new release -> App fork your repo -> App create pull req
 
 ### By GitHub WebHook (Recommended)
 Go to Repository Setting -> WebHooks -> Add webhook 
- - Payload URL: `http://159.203.181.74:8080/checkMe`
+ - Payload URL: `http://goodreadme.androidstory.dev:8080/checkMe`
  - Content type: `application/json`
  - Which events would you like to trigger this webhook?: `everything`
  
 ### Manually
 Call server manually
 ```http request
-POST http://159.203.181.74:8080/checkMe
+POST http://goodreadme.androidstory.dev:8080/checkMe
 Content-Type: application/json
 
 {
@@ -28,8 +28,8 @@ Content-Type: application/json
 ## Setup app for self host usage.
 ### Easy run (DockerHub)
 ```shell script
-docker pull vovochkastelmashchuk/good-readme:0.9
-docker run -p 8080:8080 --env GIT_HUB_TOKEN=<Github token> --rm vovochkastelmashchuk/good-readme:0.9
+docker pull vovochkastelmashchuk/good-readme:1.0
+docker run -p 8080:8080 --env GIT_HUB_TOKEN=<Github token> --rm vovochkastelmashchuk/good-readme:1.0
 ```
 
 ### Run from source code with docker

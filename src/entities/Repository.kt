@@ -7,3 +7,8 @@ data class Repository(
     val owner: String,
     val repo: String
 )
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class FullNameRequest(
+    val fullName: String
+)
