@@ -1,10 +1,15 @@
 package com.vova.rest
 
 import com.vova.entities.Repository
+import com.vova.entities.User
 
 object UrlProvider {
 
     private const val pullsSuffix = "/pulls"
+
+    fun getOldRepoUrl(originRepo: Repository, botUser: User): String {
+        return originRepo.url.replace(originRepo.user.login, botUser.login)
+    }
 
     fun getReleasesUrl(repository: Repository): String {
         return repository.releasesUrl

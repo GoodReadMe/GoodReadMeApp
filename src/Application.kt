@@ -68,13 +68,13 @@ fun Application.module(testing: Boolean = false) {
     }
 
     val gitHubToken = environment.config.property("ktor.github.token").getString()
-    val restController = RestController(log, defaultSerializer(), gitHubToken)
+    val restController = RestController(log, defaultSerializer(), gitHubToken, client)
 
     routing {
         post("/webhook/github") {
             val hook = call.receive<ReleaseHook>()
             if (hook.action == "published") {
-                call.respond(restController.handleGitHubHook(hook, client))
+                call.respond(restController.handleGitHubHook(hook))
             } else {
                 call.respond(HttpStatusCode.UnprocessableEntity)
             }
