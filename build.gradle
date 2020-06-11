@@ -5,10 +5,14 @@ buildscript {
     }
     repositories {
         jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinPluginVersion}"
         classpath "com.github.jengelman.gradle.plugins:shadow:${shadowPluginVersion}"
+        classpath "org.jmailen.gradle:kotlinter-gradle:2.4.0"
     }
 }
 
@@ -16,6 +20,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'application'
+apply plugin: "org.jmailen.kotlinter"
 
 mainClassName = 'com.vova.ApplicationKt'
 
