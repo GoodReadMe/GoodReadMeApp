@@ -28,10 +28,11 @@ data class Repository(
     @JsonProperty("forks_url")
     val forkUrl: String,
     val url: String,
-    val owner: Owner
+    @JsonProperty("owner")
+    val user: User
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class Owner(
+data class User(
     val login: String
 )

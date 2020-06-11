@@ -17,7 +17,8 @@ data class Success(val prUrl: String)
 class RestController(
     private val logger: Logger,
     private val jsonSerializer: JsonSerializer,
-    gitHubToken: String
+    gitHubToken: String,
+    private val client: HttpClient
 ) {
 
     private val updater = Base64Updater()
@@ -26,13 +27,16 @@ class RestController(
     private val tokenHeaderValue = "token $gitHubToken"
     private val tokenHeaderKey = "Authorization"
 
-    suspend fun handleGitHubHook(release: ReleaseHook, client: HttpClient): Success {
+    suspend fun handleGitHubHook(release: ReleaseHook): Success {
         val originRepo = release.repository
         val releases = client.get<List<Release>>(UrlProvider.getReleasesUrl(originRepo))
+        val versions = versionFinder.findVersions(releases)
+
+        deleteOldRepo(originRepo)
 
         val forkRepo = makeForkRepo(client, release, tokenHeaderKey, tokenHeaderValue)
         val readMe = client.get<ProjectReadMe>(UrlProvider.getReadMeUrl(forkRepo))
-        val newReadMeContent = updater.updateReadMeBase64(readMe.content, versionFinder.findVersions(releases))
+        val newReadMeContent = updater.updateReadMeBase64(readMe.content, versions)
 
         client.put<String>(readMe.url) {
             val request = FileUpdateRequest(sha = readMe.sha, content = newReadMeContent)
@@ -42,11 +46,17 @@ class RestController(
 
         val prResponse = createPullRequest(client, originRepo, forkRepo)
 
-        client.delete<String>(forkRepo.url) {
+        return Success(prResponse.htmlUrl)
+    }
+
+    private suspend fun deleteOldRepo(originRepo: Repository): String {
+        val botUser = client.get<User>("user") {
             this.headers.append(tokenHeaderKey, tokenHeaderValue)
         }
 
-        return Success(prResponse.htmlUrl)
+        return client.delete<String>(UrlProvider.getOldRepoUrl(originRepo, botUser)) {
+            this.headers.append(tokenHeaderKey, tokenHeaderValue)
+        }
     }
 
     private suspend fun createPullRequest(
@@ -56,7 +66,7 @@ class RestController(
     ): PRResponse {
         val pullRequestBody = jsonSerializer.write(
             PRRequest(
-                head = "${forkRepo.owner.login}:${originRepo.defaultBranch}",
+                head = "${forkRepo.user.login}:${originRepo.defaultBranch}",
                 base = originRepo.defaultBranch
             )
         )
