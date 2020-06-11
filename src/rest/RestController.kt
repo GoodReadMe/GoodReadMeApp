@@ -50,7 +50,7 @@ class RestController(
     }
 
     private suspend fun deleteOldRepo(originRepo: Repository): String {
-        val botUser = client.get<User>("user") {
+        val botUser = client.get<User>(UrlProvider.getCurrentUserUrl()) {
             this.headers.append(tokenHeaderKey, tokenHeaderValue)
         }
 

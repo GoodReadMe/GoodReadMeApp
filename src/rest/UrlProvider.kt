@@ -7,6 +7,10 @@ object UrlProvider {
 
     private const val pullsSuffix = "/pulls"
 
+    fun getCurrentUserUrl(): String {
+        return "https://api.github.com/user"
+    }
+
     fun getOldRepoUrl(originRepo: Repository, botUser: User): String {
         return originRepo.url.replace(originRepo.user.login, botUser.login)
     }
