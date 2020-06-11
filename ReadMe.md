@@ -9,14 +9,14 @@ App receive event about new release -> App fork your repo -> App create pull req
 
 ### By GitHub WebHook (Recommended)
 Go to Repository Setting -> WebHooks -> Add webhook 
- - Payload URL: `http://goodreadme.androidstory.dev:8080/checkMe`
+ - Payload URL: `http://goodreadme.androidstory.dev:8080/checkMe/byReleaseWebHook`
  - Content type: `application/json`
  - Which events would you like to trigger this webhook?: `everything`
  
 ### Manually
 Call server manually
 ```http request
-POST http://goodreadme.androidstory.dev:8080/checkMe
+POST http://goodreadme.androidstory.dev:8080/checkMe/byRepoPojo
 Content-Type: application/json
 
 {
@@ -24,6 +24,16 @@ Content-Type: application/json
   "repo": "<Repo name>"
 }
 ```
+or
+```http request
+POST http://goodreadme.androidstory.dev:8080/checkMe/byRepoFullName
+Content-Type: application/json
+
+{
+  "fullName": "<Owner name>/<Repo name>"
+}
+```
+
 
 ## Setup app for self host usage.
 ### Easy run (DockerHub)

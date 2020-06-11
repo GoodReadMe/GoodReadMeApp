@@ -18,3 +18,11 @@ Content-Type: application/json
   "owner": "<Owner name>",
   "repo": "<Repo name>"
 }
+
+###
+POST http://goodreadme.androidstory.dev:8080/checkMe
+Content-Type: application/json
+
+{
+  "fullName": "VovaStelmashchuk/Test-repo"
+}
