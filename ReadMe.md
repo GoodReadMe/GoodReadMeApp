@@ -15,8 +15,8 @@ Add webhook to GitHub repo:
 ## Setup app for self host usage.
 ### Easy run (DockerHub)
 ```shell script
-docker pull vovochkastelmashchuk/good-readme:0.8.2
-docker run -p 8080:8080 --env GIT_HUB_TOKEN=<Github token> --rm vovochkastelmashchuk/good-readme:0.8.2
+docker pull vovochkastelmashchuk/good-readme:0.9
+docker run -p 8080:8080 --env GIT_HUB_TOKEN=<Github token> --rm vovochkastelmashchuk/good-readme:0.9
 ```
 
 ### Run from source code with docker
