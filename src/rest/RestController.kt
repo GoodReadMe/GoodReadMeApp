@@ -1,7 +1,8 @@
 package com.vova.rest
 
 import com.vova.CannotCreatePullRequest
-import com.vova.entities.*
+import com.vova.entities.Repository
+import com.vova.entities.github.*
 import com.vova.updater.Base64Updater
 import com.vova.updater.VersionFinder
 import io.ktor.client.HttpClient
@@ -27,19 +28,22 @@ class RestController(
     private val tokenHeaderValue = "token $gitHubToken"
     private val tokenHeaderKey = "Authorization"
 
-    suspend fun handleGitHubHook(release: ReleaseHook): Success {
-        val originRepo = release.repository
+    suspend fun updateReadMe(release: Repository): Success {
+        val originRepo = client.get<GitHubRepository>(UrlProvider.getRepoUrl(release))
         val releases = client.get<List<Release>>(UrlProvider.getReleasesUrl(originRepo))
         val versions = versionFinder.findVersions(releases)
 
         deleteOldRepo(originRepo)
 
-        val forkRepo = makeForkRepo(client, release, tokenHeaderKey, tokenHeaderValue)
+        val forkRepo = makeForkRepo(client, originRepo, tokenHeaderKey, tokenHeaderValue)
         val readMe = client.get<ProjectReadMe>(UrlProvider.getReadMeUrl(forkRepo))
         val newReadMeContent = updater.updateReadMeBase64(readMe.content, versions)
 
         client.put<String>(readMe.url) {
-            val request = FileUpdateRequest(sha = readMe.sha, content = newReadMeContent)
+            val request = FileUpdateRequest(
+                sha = readMe.sha,
+                content = newReadMeContent
+            )
             this.body = jsonSerializer.write(request)
             this.headers.append(tokenHeaderKey, tokenHeaderValue)
         }
@@ -49,7 +53,7 @@ class RestController(
         return Success(prResponse.htmlUrl)
     }
 
-    private suspend fun deleteOldRepo(originRepo: Repository) {
+    private suspend fun deleteOldRepo(originRepo: GitHubRepository) {
         val botUser = client.get<User>(UrlProvider.getCurrentUserUrl()) {
             this.headers.append(tokenHeaderKey, tokenHeaderValue)
         }
@@ -65,8 +69,8 @@ class RestController(
 
     private suspend fun createPullRequest(
         client: HttpClient,
-        originRepo: Repository,
-        forkRepo: Repository
+        originRepo: GitHubRepository,
+        forkRepo: GitHubRepository
     ): PRResponse {
         val pullRequestBody = jsonSerializer.write(
             PRRequest(
@@ -88,11 +92,11 @@ class RestController(
 
     private suspend fun makeForkRepo(
         client: HttpClient,
-        release: ReleaseHook,
+        repo: GitHubRepository,
         tokenHeaderKey: String,
         tokenHeaderValue: String
-    ): Repository {
-        return client.post(release.repository.forkUrl) {
+    ): GitHubRepository {
+        return client.post(repo.forkUrl) {
             this.headers.append(tokenHeaderKey, tokenHeaderValue)
         }
     }

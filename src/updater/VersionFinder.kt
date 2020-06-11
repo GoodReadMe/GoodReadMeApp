@@ -1,7 +1,7 @@
 package com.vova.updater
 
 import com.vova.CannotFoundTwoCorrectRelease
-import com.vova.entities.Release
+import com.vova.entities.github.Release
 
 data class Versions(
     val old: String,

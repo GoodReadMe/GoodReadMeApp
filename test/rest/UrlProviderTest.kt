@@ -1,7 +1,7 @@
 package rest
 
-import com.vova.entities.Repository
-import com.vova.entities.User
+import com.vova.entities.github.GitHubRepository
+import com.vova.entities.github.User
 import com.vova.rest.UrlProvider
 import io.kotlintest.shouldBe
 import io.mockk.every
@@ -29,7 +29,7 @@ class UrlProviderTest {
             ) to "https://api.github.com/repos/Bot/Test-repo"
         ).map { (input, expected) ->
             DynamicTest.dynamicTest("Create old url") {
-                val repo = mockk<Repository> {
+                val repo = mockk<GitHubRepository> {
                     every { url } answers { input.originUrl }
                     every { user } answers {
                         mockk {
@@ -52,7 +52,7 @@ class UrlProviderTest {
         "$repoPrefix/releases"
     ).map { mockUrl ->
         DynamicTest.dynamicTest("Create releases url") {
-            val repo = mockk<Repository> {
+            val repo = mockk<GitHubRepository> {
                 every { releasesUrl } answers { mockUrl }
             }
             UrlProvider.getReleasesUrl(repo) shouldBe "$repoPrefix/releases"
@@ -65,7 +65,7 @@ class UrlProviderTest {
         "$repoPrefix/"
     ).map { mockUrl ->
         DynamicTest.dynamicTest("Create readme url") {
-            val repo = mockk<Repository> {
+            val repo = mockk<GitHubRepository> {
                 every { url } answers { mockUrl }
             }
             UrlProvider.getReadMeUrl(repo) shouldBe "$repoPrefix/readme"

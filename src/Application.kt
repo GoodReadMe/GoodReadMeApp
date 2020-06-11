@@ -2,6 +2,8 @@ package com.vova
 
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.vova.entities.ReleaseHook
+import com.vova.entities.Repository
+import com.vova.entities.github.GitHubReleaseHook
 import com.vova.rest.RestController
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -68,16 +70,28 @@ fun Application.module(testing: Boolean = false) {
     }
 
     val gitHubToken = environment.config.property("ktor.github.token").getString()
-    val restController = RestController(log, defaultSerializer(), gitHubToken, client)
+    val controller = RestController(log, defaultSerializer(), gitHubToken, client)
+
+    val checkMeEndPoint = "/checkMe"
 
     routing {
-        post("/webhook/github") {
-            val hook = call.receive<ReleaseHook>()
+        post<GitHubReleaseHook>(checkMeEndPoint) {
+            val hook = call.receive<GitHubReleaseHook>()
             if (hook.action == "published") {
-                call.respond(restController.handleGitHubHook(hook))
+                call.respond(
+                    controller.updateReadMe(
+                        Repository(
+                            hook.gitHubRepository.user.login,
+                            hook.gitHubRepository.name
+                        )
+                    )
+                )
             } else {
                 call.respond(HttpStatusCode.UnprocessableEntity)
             }
+        }
+        post<Repository>(checkMeEndPoint) {
+            controller.updateReadMe(call.receive())
         }
     }
 }

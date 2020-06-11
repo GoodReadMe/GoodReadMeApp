@@ -1,6 +1,6 @@
 package com.vova
 
-import com.vova.entities.Repository
+import com.vova.entities.github.GitHubRepository
 
 class CannotFoundTwoCorrectRelease : RuntimeException("Cannot found two published releases")
-class CannotCreatePullRequest(val originRepo: Repository) : RuntimeException("Cannot create pull request")
+class CannotCreatePullRequest(val originRepo: GitHubRepository) : RuntimeException("Cannot create pull request")

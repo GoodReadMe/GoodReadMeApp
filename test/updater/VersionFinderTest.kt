@@ -1,7 +1,7 @@
 package updater
 
 import com.vova.CannotFoundTwoCorrectRelease
-import com.vova.entities.Release
+import com.vova.entities.github.Release
 import com.vova.updater.VersionFinder
 import com.vova.updater.Versions
 import io.kotlintest.shouldBe
