@@ -1,10 +1,10 @@
-package com.vova
+package com.goodreadme
 
 import com.fasterxml.jackson.databind.SerializationFeature
-import com.vova.entities.FullNameRequest
-import com.vova.entities.Repository
-import com.vova.entities.github.GitHubReleaseHook
-import com.vova.rest.RestController
+import com.goodreadme.entities.FullNameRequest
+import com.goodreadme.entities.Repository
+import com.goodreadme.entities.github.GitHubReleaseHook
+import com.goodreadme.rest.RestController
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -73,7 +73,8 @@ fun Application.module(testing: Boolean = false) {
     }
 
     val gitHubToken = environment.config.property("ktor.github.token").getString()
-    val controller = RestController(log, defaultSerializer(), gitHubToken, client)
+    val controller =
+        RestController(log, defaultSerializer(), gitHubToken, client)
 
     routing {
         post("/checkMe/byReleaseWebHook") {
@@ -97,7 +98,12 @@ fun Application.module(testing: Boolean = false) {
             val fullNameRequest = call.receive<FullNameRequest>()
             val fullNameArgs = fullNameRequest.fullName.split('/')
             try {
-                call.respond(controller.updateReadMe(Repository(fullNameArgs[0], fullNameArgs[1])))
+                call.respond(controller.updateReadMe(
+                    Repository(
+                        fullNameArgs[0],
+                        fullNameArgs[1]
+                    )
+                ))
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.UnprocessableEntity)
             }

@@ -1,10 +1,10 @@
-package com.vova.rest
+package com.goodreadme.rest
 
-import com.vova.CannotCreatePullRequest
-import com.vova.entities.Repository
-import com.vova.entities.github.*
-import com.vova.updater.Base64Updater
-import com.vova.updater.VersionFinder
+import com.goodreadme.CannotCreatePullRequest
+import com.goodreadme.entities.Repository
+import com.goodreadme.entities.github.*
+import com.goodreadme.updater.Base64Updater
+import com.goodreadme.updater.VersionFinder
 import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JsonSerializer
 import io.ktor.client.request.delete
@@ -29,14 +29,24 @@ class RestController(
     private val tokenHeaderKey = "Authorization"
 
     suspend fun updateReadMe(release: Repository): Success {
-        val originRepo = client.get<GitHubRepository>(UrlProvider.getRepoUrl(release))
-        val releases = client.get<List<Release>>(UrlProvider.getReleasesUrl(originRepo))
+        val originRepo = client.get<GitHubRepository>(
+            UrlProvider.getRepoUrl(release)
+        )
+        val releases = client.get<List<Release>>(
+            UrlProvider.getReleasesUrl(
+                originRepo
+            )
+        )
         val versions = versionFinder.findVersions(releases)
 
         deleteOldRepo(originRepo)
 
         val forkRepo = makeForkRepo(client, originRepo, tokenHeaderKey, tokenHeaderValue)
-        val readMe = client.get<ProjectReadMe>(UrlProvider.getReadMeUrl(forkRepo))
+        val readMe = client.get<ProjectReadMe>(
+            UrlProvider.getReadMeUrl(
+                forkRepo
+            )
+        )
         val newReadMeContent = updater.updateReadMeBase64(readMe.content, versions)
 
         client.put<String>(readMe.url) {

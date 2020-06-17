@@ -1,8 +1,8 @@
 package rest
 
-import com.vova.entities.github.GitHubRepository
-import com.vova.entities.github.User
-import com.vova.rest.UrlProvider
+import com.goodreadme.entities.github.GitHubRepository
+import com.goodreadme.entities.github.User
+import com.goodreadme.rest.UrlProvider
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
