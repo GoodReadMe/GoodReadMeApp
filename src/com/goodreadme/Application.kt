@@ -73,6 +73,7 @@ fun Application.module(testing: Boolean = false) {
     }
 
     val gitHubToken = environment.config.property("ktor.github.token").getString()
+    val clientSecret = environment.config.property("ktor.github.clientsecret").getString()
     val controller =
         RestController(log, defaultSerializer(), gitHubToken, client)
 
