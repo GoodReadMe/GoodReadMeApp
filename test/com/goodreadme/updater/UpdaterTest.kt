@@ -1,7 +1,5 @@
-package updater
+package com.goodreadme.updater
 
-import com.vova.updater.Updater
-import com.vova.updater.Versions
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory

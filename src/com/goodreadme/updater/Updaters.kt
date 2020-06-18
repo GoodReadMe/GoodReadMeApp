@@ -1,6 +1,6 @@
-package com.vova.updater
+package com.goodreadme.updater
 
-import com.vova.NothingToUpdate
+import com.goodreadme.NothingToUpdate
 import java.util.*
 
 class Updater {

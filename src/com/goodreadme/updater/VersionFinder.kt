@@ -1,7 +1,7 @@
-package com.vova.updater
+package com.goodreadme.updater
 
-import com.vova.CannotFoundTwoCorrectRelease
-import com.vova.entities.github.Release
+import com.goodreadme.CannotFoundTwoCorrectRelease
+import com.goodreadme.entities.github.Release
 
 data class Versions(
     val old: String,

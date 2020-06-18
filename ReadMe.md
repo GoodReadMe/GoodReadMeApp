@@ -12,12 +12,15 @@ Go to Repository Setting -> WebHooks -> Add webhook
  - Payload URL: `http://goodreadme.androidstory.dev:8080/checkMe/byReleaseWebHook`
  - Content type: `application/json`
  - Which events would you like to trigger this webhook?: `everything`
+ - **Only for self host usage** Client secret : <Your secret>
  
 ### Manually
+**X-Hub-Signature required only for self host usage** 
 Call server manually
 ```http request
-POST http://goodreadme.androidstory.dev:8080/checkMe/byRepoPojo
+POST http://goodreadme.androidstory.dev:8080/checkMe/byRepoDetails
 Content-Type: application/json
+X-Hub-Signature: <Your secret>
 
 {
   "owner": "<Owner name>",
@@ -28,6 +31,7 @@ or
 ```http request
 POST http://goodreadme.androidstory.dev:8080/checkMe/byRepoFullName
 Content-Type: application/json
+X-Hub-Signature: <Your secret>
 
 {
   "fullName": "<Owner name>/<Repo name>"
@@ -39,29 +43,30 @@ Content-Type: application/json
 ### Easy run (DockerHub)
 ```shell script
 docker pull vovochkastelmashchuk/good-readme:1.0
-docker run -p 8080:8080 --env GIT_HUB_TOKEN=<Github token> --rm vovochkastelmashchuk/good-readme:1.0
+docker run -p 8080:8080 --env GITHUB_TOKEN=<Github token> --env GITHUB_TOKEN=<Client secret> --rm vovochkastelmashchuk/good-readme:1.0
 ```
 
 ### Run from source code with docker
 Change github.token in [application.conf](resources/application.conf)
-Build jar file
+1. Build jar file
 ```shell script
 ./gradlew shadowJar 
 ```
-Build docker image
+2. Build docker image
 ```shell script
 docker build --tag good-readme .
 ```
-Run docker image
+3. Run docker image
 ```shell script
-docker run -p 8080:8080 --env GIT_HUB_TOKEN=<Your github token> --rm good-readme
+docker run -p 8080:8080 --env GITHUB_TOKEN=<Github token> --env GITHUB_TOKEN=<Client secret> --rm good-readme
 ```
 
 ### Run from source code
-Change github.token in [application.conf](resources/application.conf)
+1. Setup environment variables
+Choose one:
+ - Change github.token and github.clientsecret in [application.conf](resources/application.conf)
+ - Add `GITHUB_TOKEN` and `CLIENT_SECRET` to environment variable
 Build and run jar file
 ```shell script
 ./gradlew shadowJar && java -jar /build/libs/updatereadme.jar 
 ```
-  
-
