@@ -11,7 +11,7 @@ Content-Type: application/json
 
 
 ###
-POST http://159.203.181.74:8080/checkMe
+POST http://localhost:5000/checkMe/byRepoDetails
 Content-Type: application/json
 
 {

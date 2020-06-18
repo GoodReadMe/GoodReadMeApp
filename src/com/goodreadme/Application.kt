@@ -5,10 +5,7 @@ import com.goodreadme.entities.FullNameRequest
 import com.goodreadme.entities.Repository
 import com.goodreadme.entities.github.GitHubReleaseHook
 import com.goodreadme.rest.RestController
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.application.log
+import io.ktor.application.*
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.json.JacksonSerializer
@@ -29,6 +26,7 @@ import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.post
 import io.ktor.routing.routing
+import io.ktor.util.pipeline.PipelineContext
 import org.slf4j.event.Level
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -79,6 +77,7 @@ fun Application.module(testing: Boolean = false) {
 
     routing {
         post("/checkMe/byReleaseWebHook") {
+            if (checkSecret(clientSecret)) return@post
             val hook = call.receive<GitHubReleaseHook>()
             if (hook.action != "published") {
                 call.respond(HttpStatusCode.UnprocessableEntity)
@@ -96,6 +95,7 @@ fun Application.module(testing: Boolean = false) {
         }
 
         post("/checkMe/byRepoFullName") {
+            if (checkSecret(clientSecret)) return@post
             val fullNameRequest = call.receive<FullNameRequest>()
             val fullNameArgs = fullNameRequest.fullName.split('/')
             try {
@@ -112,9 +112,20 @@ fun Application.module(testing: Boolean = false) {
             }
         }
 
-        post("/checkMe/byRepoPojo") {
+        post("/checkMe/byRepoDetails") {
+            if (checkSecret(clientSecret)) return@post
             val repo = call.receive<Repository>()
             call.respond(controller.updateReadMe(repo))
         }
     }
+}
+
+private suspend fun PipelineContext<Unit, ApplicationCall>.checkSecret(
+    clientSecret: String
+): Boolean {
+    if (call.request.headers["X-Hub-Signature"] != clientSecret) {
+        call.respond(HttpStatusCode.Unauthorized)
+        return true
+    }
+    return false
 }

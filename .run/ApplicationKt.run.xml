@@ -10,6 +10,8 @@
     <option name="WORKING_DIRECTORY" value="" />
     <envs>
       <env name="PORT" value="5000" />
+      <env name="GITHUB_TOKEN" value="792b0bda42304543f9ce89ed7c3c6bff8bf98dfb" />
+      <env name="CLIENT_SECRET" value="TestSecret" />
     </envs>
     <method v="2">
       <option name="Make" enabled="true" />
