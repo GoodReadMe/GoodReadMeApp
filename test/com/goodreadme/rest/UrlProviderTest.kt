@@ -1,15 +1,14 @@
-package rest
+package com.goodreadme.rest
 
 import com.goodreadme.entities.github.GitHubRepository
 import com.goodreadme.entities.github.User
-import com.goodreadme.rest.UrlProvider
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 
-class UrlProviderTest {
+internal class UrlProviderTest {
 
     private val repoPrefix = "https://api.github.com/repos/VovaStelmashchuk/Test-repo"
 
@@ -23,9 +22,9 @@ class UrlProviderTest {
 
         return listOf(
             TestInput(
-                "https://api.github.com/repos/VovaStelmashchuk/Test-repo",
+                "VovaStelmashchuk",
                 "Bot",
-                "VovaStelmashchuk"
+                "https://api.github.com/repos/VovaStelmashchuk/Test-repo"
             ) to "https://api.github.com/repos/Bot/Test-repo"
         ).map { (input, expected) ->
             DynamicTest.dynamicTest("Create old url") {
@@ -40,7 +39,7 @@ class UrlProviderTest {
                 val botUser = mockk<User> {
                     every { login } answers { input.botUserName }
                 }
-                UrlProvider.getOldRepoUrl(repo, botUser)
+                UrlProvider.getOldRepoUrl(repo, botUser) shouldBe expected
             }
         }
     }

@@ -1,9 +1,7 @@
-package updater
+package com.goodreadme.updater
 
 import com.goodreadme.CannotFoundTwoCorrectRelease
 import com.goodreadme.entities.github.Release
-import com.goodreadme.updater.VersionFinder
-import com.goodreadme.updater.Versions
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
