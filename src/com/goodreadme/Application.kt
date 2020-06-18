@@ -37,7 +37,7 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
     install(CallLogging) {
-        level = Level.INFO
+        level = Level.TRACE
         filter { call -> call.request.path().startsWith("/") }
     }
 
@@ -98,12 +98,14 @@ fun Application.module(testing: Boolean = false) {
             val fullNameRequest = call.receive<FullNameRequest>()
             val fullNameArgs = fullNameRequest.fullName.split('/')
             try {
-                call.respond(controller.updateReadMe(
-                    Repository(
-                        fullNameArgs[0],
-                        fullNameArgs[1]
+                call.respond(
+                    controller.updateReadMe(
+                        Repository(
+                            fullNameArgs[0],
+                            fullNameArgs[1]
+                        )
                     )
-                ))
+                )
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.UnprocessableEntity)
             }
