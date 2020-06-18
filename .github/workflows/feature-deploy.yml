@@ -9,9 +9,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Build jar
-        run: ./gradlew shadowJar
       - name: Build docker image
+        run: ./gradlew shadowJar
       - uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
