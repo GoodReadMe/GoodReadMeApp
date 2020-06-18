@@ -10,7 +10,7 @@ App receive event about new release -> App fork your repo -> App create pull req
 ### By GitHub WebHook (Recommended)
 **For the self host usage add query `client_secret:<your client secret>`**
 Go to Repository Setting -> WebHooks -> Add webhook 
- - Payload URL: `http://goodreadme.androidstory.dev:8080/checkMe/byReleaseWebHook`
+ - Payload URL: `http://goodreadme.androidstory.dev/checkMe/byReleaseWebHook`
  - Content type: `application/json`
  - Which events would you like to trigger this webhook?: Let me select individual events and check Release. 
  
@@ -18,7 +18,7 @@ Go to Repository Setting -> WebHooks -> Add webhook
 **For the self host usage add header `X-CLIENT-SECRET:<your client secret>` or `client_secret:<your client secret>`** 
 Call server manually
 ```http request
-POST http://goodreadme.androidstory.dev:8080/checkMe/byRepoDetails
+POST http://goodreadme.androidstory.dev/checkMe/byRepoDetails
 Content-Type: application/json
 
 {
@@ -28,7 +28,7 @@ Content-Type: application/json
 ```
 or
 ```http request
-POST http://goodreadme.androidstory.dev:8080/checkMe/byRepoFullName
+POST http://goodreadme.androidstory.dev/checkMe/byRepoFullName
 Content-Type: application/json
 
 {
@@ -41,7 +41,7 @@ Content-Type: application/json
 ### Easy run (DockerHub)
 ```shell script
 docker pull vovochkastelmashchuk/good-readme:1.0
-docker run -p 8080:8080 --env GITHUB_TOKEN=<Github token> -d --rm vovochkastelmashchuk/good-readme:1.0
+docker run -p 80:8080 --env GITHUB_TOKEN=<Github token> -d --rm vovochkastelmashchuk/good-readme:1.0
 ```
 
 ### From source code with docker
@@ -56,7 +56,7 @@ docker build --tag good-readme .
 ```
 3. Run docker image
 ```shell script
-docker run -p 8080:8080 --env GITHUB_TOKEN=<Github token> -d --rm good-readme
+docker run -p 80:8080 --env GITHUB_TOKEN=<Github token> -d --rm good-readme
 ```
 
 ### From source code

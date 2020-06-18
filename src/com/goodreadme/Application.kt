@@ -123,6 +123,9 @@ fun Application.module(testing: Boolean = false) {
 private suspend fun PipelineContext<Unit, ApplicationCall>.checkSecret(
     clientSecret: String
 ): Boolean {
+    if (clientSecret.isBlank()) {
+        return true
+    }
     val requestClientSecret = call.request.headers["X-CLIENT-SECRET"] ?: call.parameters["client_secret"] ?: return true
     if (requestClientSecret != clientSecret) {
         call.respond(HttpStatusCode.Unauthorized)
