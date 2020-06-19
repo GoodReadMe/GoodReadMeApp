@@ -1,8 +1,8 @@
-package com.vova.rest
+package com.goodreadme.rest
 
-import com.vova.entities.Repository
-import com.vova.entities.github.GitHubRepository
-import com.vova.entities.github.User
+import com.goodreadme.entities.Repository
+import com.goodreadme.entities.github.GitHubRepository
+import com.goodreadme.entities.github.User
 
 object UrlProvider {
 

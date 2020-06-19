@@ -1,4 +1,4 @@
-package com.vova.entities
+package com.goodreadme.entities
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 

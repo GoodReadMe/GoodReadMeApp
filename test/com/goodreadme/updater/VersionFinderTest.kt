@@ -1,9 +1,7 @@
-package updater
+package com.goodreadme.updater
 
-import com.vova.CannotFoundTwoCorrectRelease
-import com.vova.entities.github.Release
-import com.vova.updater.VersionFinder
-import com.vova.updater.Versions
+import com.goodreadme.CannotFoundTwoCorrectRelease
+import com.goodreadme.entities.github.Release
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
@@ -20,7 +18,10 @@ internal class VersionFinderTest {
         val newRelease = Release(newName, false, false)
         val oldRelease = Release(oldName, false, false)
         val releases = listOf(newRelease, oldRelease)
-        versionFinder.findVersions(releases) shouldBe Versions(oldName, newName)
+        versionFinder.findVersions(releases) shouldBe Versions(
+            oldName,
+            newName
+        )
     }
 
     @Test
@@ -32,7 +33,10 @@ internal class VersionFinderTest {
         val draftRelease = Release(newName, true, false)
         val oldRelease = Release(oldName, false, false)
         val releases = listOf(newRelease, draftRelease, oldRelease)
-        versionFinder.findVersions(releases) shouldBe Versions(oldName, newName)
+        versionFinder.findVersions(releases) shouldBe Versions(
+            oldName,
+            newName
+        )
     }
 
     @Test
@@ -44,7 +48,10 @@ internal class VersionFinderTest {
         val newRelease = Release(newName, false, false)
         val oldRelease = Release(oldName, false, false)
         val releases = listOf(draftRelease, newRelease, oldRelease)
-        versionFinder.findVersions(releases) shouldBe Versions(oldName, newName)
+        versionFinder.findVersions(releases) shouldBe Versions(
+            oldName,
+            newName
+        )
     }
 
     @Test
@@ -57,7 +64,10 @@ internal class VersionFinderTest {
         val preRelease = Release(newName, false, true)
         val oldRelease = Release(oldName, false, false)
         val releases = listOf(newRelease, draftRelease, preRelease, oldRelease)
-        versionFinder.findVersions(releases) shouldBe Versions(oldName, newName)
+        versionFinder.findVersions(releases) shouldBe Versions(
+            oldName,
+            newName
+        )
     }
 
     @Test

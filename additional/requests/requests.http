@@ -4,14 +4,14 @@ Content-Type: application/json
 < release_hook.json
 
 ###
-POST http://localhost:8080/checkMe
+POST https://goodreadme.androidstory.dev/checkMe/byReleaseWebHook
 Content-Type: application/json
 
 < prod_release_hook.json
 
 
 ###
-POST http://159.203.181.74:8080/checkMe
+POST http://localhost:5000/checkMe/byRepoDetails
 Content-Type: application/json
 
 {
@@ -20,8 +20,9 @@ Content-Type: application/json
 }
 
 ###
-POST http://goodreadme.androidstory.dev:8080/checkMe
+POST http://localhost:5000/checkMe/byRepoFullName
 Content-Type: application/json
+X-CLIENT-SECRET: TestSecret
 
 {
   "fullName": "VovaStelmashchuk/Test-repo"

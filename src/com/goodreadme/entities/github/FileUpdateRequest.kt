@@ -1,4 +1,4 @@
-package com.vova.entities.github
+package com.goodreadme.entities.github
 
 data class FileUpdateRequest(
     val message: String = COMMIT_MSG,

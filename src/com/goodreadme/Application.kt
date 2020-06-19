@@ -1,14 +1,11 @@
-package com.vova
+package com.goodreadme
 
 import com.fasterxml.jackson.databind.SerializationFeature
-import com.vova.entities.FullNameRequest
-import com.vova.entities.Repository
-import com.vova.entities.github.GitHubReleaseHook
-import com.vova.rest.RestController
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.application.log
+import com.goodreadme.entities.FullNameRequest
+import com.goodreadme.entities.Repository
+import com.goodreadme.entities.github.GitHubReleaseHook
+import com.goodreadme.rest.RestController
+import io.ktor.application.*
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.json.JacksonSerializer
@@ -29,6 +26,7 @@ import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.post
 import io.ktor.routing.routing
+import io.ktor.util.pipeline.PipelineContext
 import org.slf4j.event.Level
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -37,7 +35,7 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
     install(CallLogging) {
-        level = Level.INFO
+        level = Level.TRACE
         filter { call -> call.request.path().startsWith("/") }
     }
 
@@ -57,7 +55,7 @@ fun Application.module(testing: Boolean = false) {
         exception<ContentTransformationException> {
             call.respond(HttpStatusCode.UnprocessableEntity)
         }
-        exception<NothingToUpdate> {
+        exception<NothingToUpdateException> {
             call.respond(HttpStatusCode.PreconditionFailed, it.message.toString())
         }
     }
@@ -73,10 +71,13 @@ fun Application.module(testing: Boolean = false) {
     }
 
     val gitHubToken = environment.config.property("ktor.github.token").getString()
-    val controller = RestController(log, defaultSerializer(), gitHubToken, client)
+    val clientSecret = environment.config.property("ktor.github.clientsecret").getString()
+    val controller =
+        RestController(log, defaultSerializer(), gitHubToken, client)
 
     routing {
         post("/checkMe/byReleaseWebHook") {
+            if (checkSecret(clientSecret)) return@post
             val hook = call.receive<GitHubReleaseHook>()
             if (hook.action != "published") {
                 call.respond(HttpStatusCode.UnprocessableEntity)
@@ -94,18 +95,41 @@ fun Application.module(testing: Boolean = false) {
         }
 
         post("/checkMe/byRepoFullName") {
+            if (checkSecret(clientSecret)) return@post
             val fullNameRequest = call.receive<FullNameRequest>()
             val fullNameArgs = fullNameRequest.fullName.split('/')
             try {
-                call.respond(controller.updateReadMe(Repository(fullNameArgs[0], fullNameArgs[1])))
+                call.respond(
+                    controller.updateReadMe(
+                        Repository(
+                            fullNameArgs[0],
+                            fullNameArgs[1]
+                        )
+                    )
+                )
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.UnprocessableEntity)
+                call.respond(HttpStatusCode.UnprocessableEntity, "Cannot parse $fullNameRequest")
             }
         }
 
-        post("/checkMe/byRepoPojo") {
+        post("/checkMe/byRepoDetails") {
+            if (checkSecret(clientSecret)) return@post
             val repo = call.receive<Repository>()
             call.respond(controller.updateReadMe(repo))
         }
     }
+}
+
+private suspend fun PipelineContext<Unit, ApplicationCall>.checkSecret(
+    clientSecret: String
+): Boolean {
+    if (clientSecret.isBlank()) {
+        return true
+    }
+    val requestClientSecret = call.request.headers["X-CLIENT-SECRET"] ?: call.parameters["client_secret"] ?: return true
+    if (requestClientSecret != clientSecret) {
+        call.respond(HttpStatusCode.Unauthorized)
+        return true
+    }
+    return false
 }
