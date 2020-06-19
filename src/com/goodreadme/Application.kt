@@ -55,7 +55,7 @@ fun Application.module(testing: Boolean = false) {
         exception<ContentTransformationException> {
             call.respond(HttpStatusCode.UnprocessableEntity)
         }
-        exception<NothingToUpdate> {
+        exception<NothingToUpdateException> {
             call.respond(HttpStatusCode.PreconditionFailed, it.message.toString())
         }
     }
@@ -108,7 +108,7 @@ fun Application.module(testing: Boolean = false) {
                     )
                 )
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.UnprocessableEntity)
+                call.respond(HttpStatusCode.UnprocessableEntity, "Cannot parse $fullNameRequest")
             }
         }
 

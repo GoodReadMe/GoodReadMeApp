@@ -20,8 +20,9 @@ Content-Type: application/json
 }
 
 ###
-POST http://goodreadme.androidstory.dev:8080/checkMe/byRepoFullName
+POST http://localhost:5000/checkMe/byRepoFullName
 Content-Type: application/json
+X-CLIENT-SECRET: TestSecret
 
 {
   "fullName": "VovaStelmashchuk/Test-repo"

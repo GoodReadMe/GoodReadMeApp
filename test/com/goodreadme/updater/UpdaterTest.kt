@@ -1,8 +1,10 @@
 package com.goodreadme.updater
 
+import com.goodreadme.NothingToUpdateException
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
+import kotlin.test.assertFailsWith
 
 internal class UpdaterTest {
 
@@ -22,7 +24,6 @@ internal class UpdaterTest {
         Versions("1.0.5-alfa", "1.0.5-beta"),
         Versions("2.0.0-alfa", "2.1.0"),
         Versions("2.0.19", "2.18")
-
     )
 
     private val readMeTemplates = listOf(
@@ -155,12 +156,26 @@ internal class UpdaterTest {
     )
 
     @TestFactory
-    fun runMatrixTest(): List<DynamicTest> {
+    fun testUpdateCorrectReadMe(): List<DynamicTest> {
         return readMeTemplates.flatMap { readMeTemplate ->
             versionsList.map { versions ->
                 DynamicTest.dynamicTest("Test") {
                     val testData = buildReadMe(readMeTemplate, versions)
                     updater.updateReadMe(testData.input, versions) shouldBe testData.expected
+                }
+            }
+        }
+    }
+
+    @TestFactory
+    fun throwErrorForNotValidReadMe(): List<DynamicTest> {
+        return readMeTemplates.map { readMeTemplate ->
+
+            DynamicTest.dynamicTest("Test") {
+                val testData = buildReadMe(readMeTemplate, Versions("0.2", "0.2"))
+
+                assertFailsWith<NothingToUpdateException> {
+                    updater.updateReadMe(testData.input, Versions("0.3", "0.4"))
                 }
             }
         }
