@@ -55,7 +55,7 @@ fun Application.module(testing: Boolean = false) {
         exception<ContentTransformationException> {
             call.respond(HttpStatusCode.UnprocessableEntity)
         }
-        exception<NothingToUpdate> {
+        exception<NothingToUpdateException> {
             call.respond(HttpStatusCode.PreconditionFailed, it.message.toString())
         }
     }
@@ -108,7 +108,7 @@ fun Application.module(testing: Boolean = false) {
                     )
                 )
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.UnprocessableEntity)
+                call.respond(HttpStatusCode.UnprocessableEntity, "Cannot parse $fullNameRequest")
             }
         }
 
@@ -123,7 +123,11 @@ fun Application.module(testing: Boolean = false) {
 private suspend fun PipelineContext<Unit, ApplicationCall>.checkSecret(
     clientSecret: String
 ): Boolean {
-    if (call.request.headers["X-Hub-Signature"] != clientSecret) {
+    if (clientSecret.isBlank()) {
+        return true
+    }
+    val requestClientSecret = call.request.headers["X-CLIENT-SECRET"] ?: call.parameters["client_secret"] ?: return true
+    if (requestClientSecret != clientSecret) {
         call.respond(HttpStatusCode.Unauthorized)
         return true
     }

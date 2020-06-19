@@ -4,23 +4,22 @@ The app update version of library in your ReadMe file.
 ## How it's work
 App receive event about new release -> App fork your repo -> App create pull request with change in your ReadMe file.
 
-## Setup
-### Use our github action (InProgress)
+## Integrate with your project
+### Use our [github action](https://github.com/GoodReadMe/GoodReadMeAction) (Recommend)
 
 ### By GitHub WebHook (Recommended)
+**For the self host usage add query `client_secret:<your client secret>`**
 Go to Repository Setting -> WebHooks -> Add webhook 
- - Payload URL: `http://goodreadme.androidstory.dev:8080/checkMe/byReleaseWebHook`
+ - Payload URL: `http://goodreadme.androidstory.dev/checkMe/byReleaseWebHook`
  - Content type: `application/json`
- - Which events would you like to trigger this webhook?: `everything`
- - **Only for self host usage** Client secret : <Your secret>
+ - Which events would you like to trigger this webhook?: Let me select individual events and check Release. 
  
 ### Manually
-**X-Hub-Signature required only for self host usage** 
+**For the self host usage add header `X-CLIENT-SECRET:<your client secret>` or `client_secret:<your client secret>`** 
 Call server manually
 ```http request
-POST http://goodreadme.androidstory.dev:8080/checkMe/byRepoDetails
+POST http://goodreadme.androidstory.dev/checkMe/byRepoDetails
 Content-Type: application/json
-X-Hub-Signature: <Your secret>
 
 {
   "owner": "<Owner name>",
@@ -29,24 +28,23 @@ X-Hub-Signature: <Your secret>
 ```
 or
 ```http request
-POST http://goodreadme.androidstory.dev:8080/checkMe/byRepoFullName
+POST http://goodreadme.androidstory.dev/checkMe/byRepoFullName
 Content-Type: application/json
-X-Hub-Signature: <Your secret>
 
 {
   "fullName": "<Owner name>/<Repo name>"
 }
 ```
 
-
 ## Setup app for self host usage.
+**For the self host add `CLIENT_SECRET` to environment variable** 
 ### Easy run (DockerHub)
 ```shell script
 docker pull vovochkastelmashchuk/good-readme:1.0
-docker run -p 8080:8080 --env GITHUB_TOKEN=<Github token> --env GITHUB_TOKEN=<Client secret> --rm vovochkastelmashchuk/good-readme:1.0
+docker run -p 80:8080 --env GITHUB_TOKEN=<Github token> -d --rm vovochkastelmashchuk/good-readme:1.0
 ```
 
-### Run from source code with docker
+### From source code with docker
 Change github.token in [application.conf](resources/application.conf)
 1. Build jar file
 ```shell script
@@ -58,14 +56,14 @@ docker build --tag good-readme .
 ```
 3. Run docker image
 ```shell script
-docker run -p 8080:8080 --env GITHUB_TOKEN=<Github token> --env GITHUB_TOKEN=<Client secret> --rm good-readme
+docker run -p 80:8080 --env GITHUB_TOKEN=<Github token> -d --rm good-readme
 ```
 
-### Run from source code
+### From source code
 1. Setup environment variables
 Choose one:
  - Change github.token and github.clientsecret in [application.conf](resources/application.conf)
- - Add `GITHUB_TOKEN` and `CLIENT_SECRET` to environment variable
+ - Add `GITHUB_TOKEN` to environment variable
 Build and run jar file
 ```shell script
 ./gradlew shadowJar && java -jar /build/libs/updatereadme.jar 
