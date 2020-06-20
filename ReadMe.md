@@ -16,6 +16,7 @@ Go to Repository Settings -> WebHooks -> Add webhook
  
 ### Manually
 **For the self host usage add a header `X-CLIENT-SECRET:<your client secret>` or `client_secret:<your client secret>`** 
+
 Call server manually
 ```http request
 POST http://goodreadme.androidstory.dev/checkMe/byRepoDetails
