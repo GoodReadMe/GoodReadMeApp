@@ -25,5 +25,5 @@ Content-Type: application/json
 X-CLIENT-SECRET: TestSecret
 
 {
-  "fullName": "VovaStelmashchuk/Test-repo"
+  "fullName": "VovaStelmashchuk/Stage-project"
 }

@@ -98,18 +98,14 @@ fun Application.module(testing: Boolean = false) {
             if (checkSecret(clientSecret)) return@post
             val fullNameRequest = call.receive<FullNameRequest>()
             val fullNameArgs = fullNameRequest.fullName.split('/')
-            try {
-                call.respond(
-                    controller.updateReadMe(
-                        Repository(
-                            fullNameArgs[0],
-                            fullNameArgs[1]
-                        )
-                    )
-                )
+            val repo = try {
+                Repository(fullNameArgs[0], fullNameArgs[1])
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.UnprocessableEntity, "Cannot parse $fullNameRequest")
+                return@post
             }
+
+            call.respond(controller.updateReadMe(repo))
         }
 
         post("/checkMe/byRepoDetails") {
@@ -124,7 +120,7 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.checkSecret(
     clientSecret: String
 ): Boolean {
     if (clientSecret.isBlank()) {
-        return true
+        return false
     }
     val requestClientSecret = call.request.headers["X-CLIENT-SECRET"] ?: call.parameters["client_secret"] ?: return true
     if (requestClientSecret != clientSecret) {
