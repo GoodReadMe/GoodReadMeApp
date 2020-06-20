@@ -32,20 +32,17 @@ class RestController(
         val originRepo = client.get<GitHubRepository>(
             UrlProvider.getRepoUrl(release)
         )
-        val releases = client.get<List<Release>>(
-            UrlProvider.getReleasesUrl(
-                originRepo
-            )
-        )
-        val versions = versionFinder.findVersions(releases)
 
         deleteOldRepo(originRepo)
 
+        val releases = client.get<List<Release>>(
+            UrlProvider.getReleasesUrl(originRepo)
+        )
+        val versions = versionFinder.findVersions(releases)
+
         val forkRepo = makeForkRepo(client, originRepo, tokenHeaderKey, tokenHeaderValue)
         val readMe = client.get<ProjectReadMe>(
-            UrlProvider.getReadMeUrl(
-                forkRepo
-            )
+            UrlProvider.getReadMeUrl(forkRepo)
         )
         val newReadMeContent = updater.updateReadMeBase64(readMe.content, versions)
 

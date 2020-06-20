@@ -10,7 +10,6 @@
     <option name="WORKING_DIRECTORY" value="" />
     <envs>
       <env name="PORT" value="5000" />
-      <env name="CLIENT_SECRET" value="TestSecret" />
     </envs>
     <method v="2">
       <option name="Make" enabled="true" />
