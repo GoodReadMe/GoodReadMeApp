@@ -5,7 +5,7 @@ pull_request_rules:
       - status-success=Run unit tests
       - status-success=ktlint
       - status-success=Try build application
-      - base:dev
+      - base:develop
       - author:VovaStelmashchuk
     actions:
       merge:
@@ -16,7 +16,7 @@ pull_request_rules:
       - status-success=Run unit tests
       - status-success=ktlint
       - status-success=Try build application
-      - base:dev
+      - base:develop
       - author:GoodReadMeBot
     actions:
       merge:
@@ -27,7 +27,7 @@ pull_request_rules:
       - status-success=Run unit tests
       - status-success=ktlint
       - status-success=Try build application
-      - base:dev
+      - base:develop
       - "#approved-reviews-by>=1"
     actions:
       merge:
@@ -38,7 +38,7 @@ pull_request_rules:
       - status-success=Run unit tests
       - status-success=ktlint
       - status-success=Try build application
-      - base:dev
+      - base:develop
       - author~=^dependabot(|-preview)\[bot\]$
     actions:
       merge:
