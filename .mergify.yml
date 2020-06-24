@@ -3,8 +3,6 @@ pull_request_rules:
     conditions:
       - status-success=Check Code Quality
       - status-success=Run unit tests
-      - status-success=ktlint
-      - status-success=Try build application
       - base:develop
       - author:VovaStelmashchuk
     actions:
@@ -14,8 +12,6 @@ pull_request_rules:
     conditions:
       - status-success=Check Code Quality
       - status-success=Run unit tests
-      - status-success=ktlint
-      - status-success=Try build application
       - base:develop
       - author:GoodReadMeBot
     actions:
@@ -25,8 +21,6 @@ pull_request_rules:
     conditions:
       - status-success=Check Code Quality
       - status-success=Run unit tests
-      - status-success=ktlint
-      - status-success=Try build application
       - base:develop
       - "#approved-reviews-by>=1"
     actions:
@@ -36,8 +30,6 @@ pull_request_rules:
     conditions:
       - status-success=Check Code Quality
       - status-success=Run unit tests
-      - status-success=ktlint
-      - status-success=Try build application
       - base:develop
       - author~=^dependabot(|-preview)\[bot\]$
     actions:
