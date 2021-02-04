@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlinPluginVersion = '1.4.21-2'
+        kotlinPluginVersion = '1.4.30'
         shadowPluginVersion = '5.1.0'
     }
     repositories {
