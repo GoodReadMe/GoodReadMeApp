@@ -68,7 +68,7 @@ dependencies {
 
     def junit_version = '5.7.1'
     def junit_runner_version = '3.4.2'
-    def mockk_version = '1.10.5'
+    def mockk_version = '1.10.6'
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
