@@ -12,7 +12,7 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinPluginVersion}"
         classpath "com.github.jengelman.gradle.plugins:shadow:${shadowPluginVersion}"
-        classpath "org.jmailen.gradle:kotlinter-gradle:3.4.0"
+        classpath "org.jmailen.gradle:kotlinter-gradle:3.4.1"
     }
 }
 
